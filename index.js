@@ -13,9 +13,7 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
     }
     covData = JSON.parse(data);
     let result = processCoverage(covData, '.');
-    result.forEach((coverageValue, path) => {
-        console.log(`${path}: ${coverageValue}%`)
-    })
+    console.log(formatPlain(result));
 });
 
 function processCoverage(coverageJSON, name) {
@@ -42,4 +40,9 @@ function isDirectory(obj) {
 function processFile(coverageJSON) {
     //console.assert(!isDirectory(coverageJSON));
     return coverageJSON.coveragePercent;
+}
+
+function formatPlain(coverageMap) {
+    return Array.from(coverageMap.entries()).map(
+        ([path, value]) => `${path}: ${value} %`).join('\n');
 }
