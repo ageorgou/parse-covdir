@@ -12,19 +12,27 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
         return console.log("ERROR!");
     }
     covData = JSON.parse(data);
-    processCoverage(covData, '.');
+    let result = processCoverage(covData, '.');
+    result.forEach((coverageValue, path) => {
+        console.log(`${path}: ${coverageValue}%`)
+    })
 });
 
 function processCoverage(coverageJSON, name) {
     // For each entry, find if it's a file or directory
-    // If a file, print the full path and the coverage percentage
-    // If a directory, print the overall coverage percentage and recurse
-    console.log(`${name}: ${processFile(coverageJSON)}\%`);
+    // If a file, note the full path and the coverage percentage
+    // If a directory, get the overall coverage percentage and recurse
+    let fileCoverage = new Map();
+    fileCoverage.set(name, processFile(coverageJSON));
     if (isDirectory(coverageJSON)) {
         Object.entries(coverageJSON.children).forEach(([child, coverage]) => {
-            processCoverage(coverage, `${name}/${child}`);
+            let directoryResults = processCoverage(coverage, `${name}/${child}`);
+            directoryResults.forEach((result, path) => {
+                fileCoverage.set(path, result);
+            })
         })
     }
+    return fileCoverage;
 }
 
 function isDirectory(obj) {
