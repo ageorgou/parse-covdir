@@ -1,0 +1,13 @@
+name: 'Parse covdir'
+description: 'Parse grcov output in covdir format'
+inputs:
+  input-file:
+    description: 'Path to the file to read'
+    required: false
+    default: './covdir.json'
+outputs:
+  text: # id of output
+    description: 'A textual description of the coverage'
+runs:
+  using: 'node12'
+  main: 'index.js'
