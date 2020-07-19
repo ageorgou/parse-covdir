@@ -2,19 +2,20 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const fs = require("fs");
 
-// Read the file
-let inputFile = 'covdir.json'; //core.getInput('input-file');
-let covData;
 function work() {
+    // Read the file
+    let inputFile = core.getInput('input-file');
     fs.readFile(inputFile, 'utf8', function(err, data) {
         if (err) {
             // Mark the action as failed and also show the error message
             core.setFailed(err.message);
             return console.log("ERROR!");
         }
-        covData = JSON.parse(data);
+        let covData = JSON.parse(data);
         let result = processCoverage(covData, '.');
-        console.log(formatPlain(result));
+        let outputText = formatPlain(result);
+        core.setOutput('text', outputText);
+        console.log(outputText);
     });
 }
 // Only run the above if directly running this file (otherwise jest gets
