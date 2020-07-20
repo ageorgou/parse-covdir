@@ -1,22 +1,25 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
-const fs = require("fs");
+const fs = require("fs").promises;
 
-function work() {
+async function work() {
     // Read the file
     let inputFile = core.getInput('input-file');
-    fs.readFile(inputFile, 'utf8', function(err, data) {
-        if (err) {
-            // Mark the action as failed and also show the error message
-            core.setFailed(err.message);
-            return console.log("ERROR!");
-        }
-        let covData = JSON.parse(data);
-        let result = processCoverage(covData, '.');
-        let outputText = formatPlain(result);
-        core.setOutput('text', outputText);
-        console.log(outputText);
-    });
+    let outputText;
+    try {
+        await fs.readFile(inputFile).then(data => {
+            let covData = JSON.parse(data);
+            let result = processCoverage(covData, '.');
+            outputText = formatPlain(result);
+            core.setOutput('text', outputText);
+            console.log(outputText);
+        });
+        return outputText;
+    } catch (err) {
+        // Mark the action as failed and also show the error message
+        core.setFailed(err.message);
+        return console.log("ERROR!");
+    }
 }
 // Only run the above if directly running this file (otherwise jest gets
 // annoyed when running the tests because of the logging in work())
@@ -55,4 +58,4 @@ function formatPlain(coverageMap) {
         ([path, value]) => `${path}: ${value} %`).join('\n');
 }
 
-module.exports = {processCoverage};
+module.exports = {work, processCoverage};
