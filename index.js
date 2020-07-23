@@ -13,7 +13,18 @@ function work() {
         }
         let covData = JSON.parse(data);
         let result = processCoverage(covData, '.');
-        let outputText = formatPlain(result);
+        let formatter = formatPlain;
+        switch (core.getInput('format')) {
+            case 'plain':
+                break;  // already set
+            case 'github':
+                formatter = formatGithub;
+                break;
+            default:
+                console.log(
+                    'Format not recognised; options are plain, github.')
+        }
+        let outputText = formatter(result);
         core.setOutput('text', outputText);
         console.log(outputText);
     });
@@ -53,6 +64,14 @@ function processFile(coverageJSON) {
 function formatPlain(coverageMap) {
     return Array.from(coverageMap.entries()).map(
         ([path, value]) => `${path}: ${value} %`).join('\n');
+}
+
+function formatGithub(coverageMap) {
+    let header = "Path | Coverage\n"
+    let line = "--- | ---\n"
+    let tableBody = Array.from(coverageMap.entries()).map(
+        ([path, value]) => `${path} | ${value} %`).join('\n');
+    return header + line + tableBody
 }
 
 module.exports = {processCoverage};

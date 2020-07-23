@@ -5,6 +5,10 @@ inputs:
     description: 'Path to the file to read'
     required: false
     default: './covdir.json'
+  format:
+    description: 'How to format the text (options: plain, github)'
+    required: false
+    default: 'plain'
 outputs:
   text: # id of output
     description: 'A textual description of the coverage'

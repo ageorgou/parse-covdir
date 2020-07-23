@@ -14,6 +14,14 @@ The location of the JSON file to be parsed.
 
 **Default:** `covdir.json`.
 
+### format
+How to format the output.
+Options currently supported are
+- `plain` (see example below)
+- `github` (a table in GitHub-flavour markdown)
+
+**Default:** `plain`.
+
 ## Outputs
 ### text
 A string containing a summary of the coverage information.
@@ -35,4 +43,5 @@ Example output (corresponding to [the test input](./__tests__/covdir.json)):
 uses: ageorgou/parse-covdir@v0.1
 with:
   input-file: './covdir-json'
+  format: plain
 ```
