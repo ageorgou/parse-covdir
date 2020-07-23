@@ -26,7 +26,8 @@ function work() {
         }
         let outputText = formatter(result);
         core.setOutput('text', outputText);
-        console.log(outputText);
+        // Always print plain formatting as it's easier to check by eye
+        console.log(formatPlain(result));
     });
 }
 // Only run the above if directly running this file (otherwise jest gets
