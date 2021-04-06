@@ -6,9 +6,10 @@ jobs:
   invoke-basic:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Call the latest version of this action
       id: coverage_parse
-      uses: ageorgou/parse-covdir@${{ github.sha }}
+      uses: ./
       with:
         input-file: __tests__/covdir.json
     - name: Show the output for easier debugging
