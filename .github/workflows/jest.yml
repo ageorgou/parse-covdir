@@ -1,0 +1,13 @@
+name: parsing-tests
+
+on: push
+
+jobs:
+  simple-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: npm install
+    - name: Run simple parsing test
+      run: npm run test
