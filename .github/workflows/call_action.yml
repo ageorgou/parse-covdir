@@ -1,0 +1,20 @@
+name: invoke-as-action
+
+on: push
+
+jobs:
+  invoke-basic:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Call the latest version of this action
+      id: coverage_parse
+      uses: ageorgou/parse-covdir@${{ github.sha }}
+      with:
+        input-file: __tests__/covdir.json
+    - name: Show the output for easier debugging
+      id: debug
+      run: echo "${{ steps.coverage_parse.outputs.text }}"
+    - id: check_not_empty
+      run: |
+        LEN=$(printf "%s" "${{ steps.coverage_parse.outputs.text }}" | wc -c)
+        [[ ${LEN} -gt 0 ]]
